@@ -1,0 +1,27 @@
+*mvndisp.txt*
+
+Author: ArunachalaShiva
+
+USAGE				*mvndisp*
+
+:MvnInit		 	Create mvn project using archetype quickstart
+:MvnCompile [all|module] 	Start mvn compile of all or current module using Dispatch
+:MvnClean [all|module] 		Start mvn clean of all or current module using Dispatch
+:MvnTest [all|module|this]	Start mvn test of all modules or current module or current test using Dispatch
+
+Requires vim-dispatch plugin
+
+VARIABLES			*mvndisp-variables*
+
+g:mvndisp_mvn_cmd		*mvndisp-mvn-cmd* *g:mvndisp-mvn-cmd*
+	Default value: 'mvn'
+	Can be used to run a pre-cmd to mvn. For example, to unset a variable as pre-cmd
+	value can be 'unset JAVA_TOOL_OPTIONS && mvn'
+
+g:mvndisp_compile_cmd		*mvndisp-compile-cmd* *g:mvndisp-compile-cmd*
+	Default value: 'package'
+	Other values can be 'install', 'clean package', 'compile', etc
+
+g:mvndisp_extra_flags		*mvndisp-extra_flags* *g:mvndisp-extra_flags*
+	Default value: ''
+	Can be used to pass extra mvn flags
