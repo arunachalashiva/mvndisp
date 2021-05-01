@@ -6,7 +6,7 @@ let g:loaded_mvndisp = 1
 
 " Get path of this plugin file (resolving symlinks)
 let s:spath = fnamemodify(resolve(expand('<sfile>:p')), ':h')
-let s:tp_path = fnamemodify(s:spath, ':h') . '/third_party/'
+let s:tp_path = fnamemodify(s:spath, ':h') . '/archetypes/'
 
 " Read user settings are initialize with defaults
 let s:mvnCmd = exists('g:mvndisp_mvn_cmd') ? g:mvndisp_mvn_cmd : "mvn"
@@ -27,8 +27,8 @@ endfun
 
 " Function to get the sub commands for init command
 fun! s:MvnGetInitOptions(ArgLead, CmdLine, CursorPos)
-        let l:directories = glob(s:tp_path . "*", 1, 1)
-        call map(l:directories, 'fnamemodify(v:val, ":t")')
+	let l:directories = glob(s:tp_path . "*", 1, 1)
+	call map(l:directories, 'fnamemodify(v:val, ":t")')
 	return filter(l:directories, 'v:val =~ a:ArgLead')
 endfun
 
@@ -98,13 +98,13 @@ fun! s:MvnClean(subCmd)
 endfun
 
 fun! s:MvnInit(subCmd)
-        echom "Initializing archetype" . a:subCmd
+	echom "Initializing archetype" . a:subCmd
 
-        "system("mvn clean install -f " . s:tp_path . a:subCmd)
-        let l:pom_path = s:tp_path . a:subCmd
+	"system("mvn clean install -f " . s:tp_path . a:subCmd)
+	let l:pom_path = s:tp_path . a:subCmd
 	let l:result = system("mvn install clean -f " . l:pom_path)
 	redraw
-	"exe 'Dispatch mvn clean install -B -f '  l:pom_path
+	"exe 'Dispatch mvn install clean -B -f '  l:pom_path
 
 	let l:groupId = input('Enter Group Id: ')
 	let l:artifactId = input('Enter Artifact Id: ')
