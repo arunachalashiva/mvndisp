@@ -102,7 +102,7 @@ fun! s:MvnInit(subCmd)
 
         "system("mvn clean install -f " . s:tp_path . a:subCmd)
         let l:pom_path = s:tp_path . a:subCmd
-	let l:result = system("mvn clean install -f " . l:pom_path)
+	let l:result = system("mvn install clean -f " . l:pom_path)
 	redraw
 	"exe 'Dispatch mvn clean install -B -f '  l:pom_path
 
