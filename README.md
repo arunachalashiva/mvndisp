@@ -3,8 +3,11 @@ A simple vim plugin for maven. *Requires vim-dispatch plugin*.
 
 ## Commands
 ### MvnInit
-To create a maven project using the quickstart maven archetype. This command
-prompts the caller to enter the groupId and aritfactId to create the project
+To create a maven project using one of the below supported maven archetype.
+* **java8-junit4-lombok** 
+*  **java11-junit5-lombok**
+
+This command prompts the caller to enter the groupId and aritfactId to create the project
  and changes the current directory to the created project root directory.
 ### MvnCompile
 To compile the current maven project. The required subcommands are

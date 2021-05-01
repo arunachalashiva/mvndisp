@@ -4,6 +4,10 @@ if exists('g:loaded_mvndisp')
 endif
 let g:loaded_mvndisp = 1
 
+" Get path of this plugin file (resolving symlinks)
+let s:spath = fnamemodify(resolve(expand('<sfile>:p')), ':h')
+let s:tp_path = fnamemodify(s:spath, ':h') . '/third_party/'
+
 " Read user settings are initialize with defaults
 let s:mvnCmd = exists('g:mvndisp_mvn_cmd') ? g:mvndisp_mvn_cmd : "mvn"
 let s:mvnExtraFlgs = exists('g:mvndisp_extra_flags') ? g:mvndisp_extra_flags : ""
@@ -21,6 +25,13 @@ fun! s:MvnGetTestOptions(ArgLead, CmdLine, CursorPos)
 	return filter(l:options, 'v:val =~ a:ArgLead')
 endfun
 
+" Function to get the sub commands for init command
+fun! s:MvnGetInitOptions(ArgLead, CmdLine, CursorPos)
+        let l:directories = glob(s:tp_path . "*", 1, 1)
+        call map(l:directories, 'fnamemodify(v:val, ":t")')
+	return filter(l:directories, 'v:val =~ a:ArgLead')
+endfun
+
 " Plugin Commands definitions
 if !exists(":MvnCompile")
 	command -nargs=1 -complete=customlist,s:MvnGetOptions MvnCompile :call s:MvnCompile(<q-args>)
@@ -32,7 +43,7 @@ if !exists(":MvnClean")
 	command -nargs=1 -complete=customlist,s:MvnGetOptions MvnClean :call s:MvnClean(<q-args>)
 endif
 if !exists(":MvnInit")
-	command -nargs=0 MvnInit :call s:MvnInit()
+	command -nargs=1 -complete=customlist,s:MvnGetInitOptions MvnInit :call s:MvnInit(<q-args>)
 endif
 
 " Function to get the module name of the current file. Searches for
@@ -86,14 +97,25 @@ fun! s:MvnClean(subCmd)
 	call s:MvnExeCommon("clean", l:flgs)	
 endfun
 
-fun! s:MvnInit()
+fun! s:MvnInit(subCmd)
+        echom "Initializing archetype" . a:subCmd
+
+        "system("mvn clean install -f " . s:tp_path . a:subCmd)
+        let l:pom_path = s:tp_path . a:subCmd
+	let l:result = system("mvn clean install -f " . l:pom_path)
+	redraw
+	"exe 'Dispatch mvn clean install -B -f '  l:pom_path
+
 	let l:groupId = input('Enter Group Id: ')
 	let l:artifactId = input('Enter Artifact Id: ')
 	redraw
 	echom "Initializing..."
 
 	let l:flgs = " -DgroupId=" . l:groupId . " -DartifactId=" . l:artifactId
-	let l:flgs .= " -DarchetypeArtifactId=maven-archetype-quickstart -DarchetypeVersion=1.4 -DinteractiveMode=false"
+	let l:flgs .= " -DarchetypeGroupId=org.arunachalashiva.tools"
+        let l:flgs .= " -DarchetypeArtifactId=" . a:subCmd
+        let l:flgs .= " -DarchetypeVersion=1.0.0-SNAPSHOT"
+        let l:flgs .= " -DinteractiveMode=false"
 	let l:cmd = "mvn -B archetype:generate" . l:flgs
 	let l:result = system(l:cmd)
 	redraw
