@@ -24,9 +24,9 @@ M.run_command = function(command)
 			vim.schedule(function()
 				if exit_code ~= 0 then
 					print("Command failed with exit code: " .. exit_code)
-					return
+				else
+					print("Command finished successfully.")
 				end
-				print("Command finished successfully.")
 				local buf = vim.api.nvim_create_buf(false, true)
 				vim.api.nvim_buf_set_lines(buf, 0, -1, false, output_lines)
 				local width = math.floor(vim.o.columns * 0.8)
